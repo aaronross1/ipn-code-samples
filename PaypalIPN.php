@@ -65,6 +65,7 @@ class PaypalIPN
         }
 
         $raw_post_data = file_get_contents('php://input');
+        file_put_contents('php://stderr', print_r($raw_post_data, TRUE));
         $file = file_put_contents("input.txt", $raw_post_data);
         $raw_post_array = explode('&', $raw_post_data);
         $myPost = array();
