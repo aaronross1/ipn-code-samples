@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Add meta tags for mobile and IE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <style>
+    body {
+      background-color: #333;
+    }
+
+
+    .container {
+      padding: 2em;
+      display: flex;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      border-radius: 20px;
+      flex-flow: row wrap;
+    }
+
+    @media screen and (max-width: 1140px) {
+      .container {
+        /* When on medium sized screens, we center it by evenly distributing empty space around items */
+        align-content: space-around;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        /* On small screens, we are no longer using row direction but column */
+        flex-direction: column;
+      }
+    }
+
+    .button {
+      margin: 1em;
+      padding: 2em;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+
+    .button:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    h2:after,
+    h3:after {
+      position: absolute;
+      content: "";
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      border-radius: 2px;
+      box-shadow:
+        inset 0 1px 1px rgba(0, 0, 0, 0.5),
+        0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    h2:after {
+      background: #0AF;
+    }
+
+
+    h1 {
+      margin: 1em 0 0.5em 0;
+      font-weight: 100;
+      text-transform: uppercase;
+      color: #00acca;
+      font-style: italic;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 58px;
+      line-height: 54px;
+      text-shadow: 2px 5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      margin: 1em 0 .6em 0;
+      padding: 0 0 0 20px;
+      font-weight: normal;
+      color: white;
+      font-family: 'Hammersmith One', sans-serif;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+      position: relative;
+      font-size: 30px;
+      line-height: 40px;
+    }
+
+    h4 {
+      margin: 1em 0 0.5em 0;
+      color: #00acca;
+      font-size: 26px;
+      line-height: 40px;
+      font-weight: bold;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <div class="header">
+      <h1>PayPal Buttons</h1>
+    </div>
+
+    <h2>Smart Payment Buttons</h2>
+
+    <div class="container">
+
+      <div class="button">
+        <h4>Smart Payment Button Black</h4>
+                
+        <!-- Set up a container element for the button -->
+        <div id="paypal-button-container"></div>
+        
+        <!-- Include the PayPal JavaScript SDK -->
+        <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+        
+        <script>
+          // Render the PayPal button into #paypal-button-container
+          paypal.Buttons({
+
+            style: {
+              color: 'black',
+              shape: 'pill',
+              label: 'pay',
+              height: 40
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '0.02'
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Show a success message to the buyer
+                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                });
+            }
+
+          }).render('#paypal-button-container');
+        </script>
+        <h3>Options</h3>
+        <ul>
+          <li>layout: vertical, horizontal</li>
+          <li>color: black, white, blue, gold, silver</li>
+          <li>shape: pill, rect</li>
+          <li>label: pay, buynow, installment, checkout, paypal</li>
+          <li>height: 25 to 55</li>
+          <li>tagline: true or false</li>
+        </ul>
+        <a href="https://developer.paypal.com/docs/checkout/integration-features/customize-button/">Variables Documentation</a>
+      </div>
+    </div>
+
+    <h2>Simple HTML Buttons</h2>
+
+    <div class="container">
+
+      <div class="button">
+        <h4>Buy Now</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="get">
+
+          <!-- Identify your business so that you can collect the payments. -->
+          <input type="hidden" name="business" value="aaron12@paypal.com">
+
+          <!-- Specify a Buy Now button. -->
+          <input type="hidden" name="cmd" value="_xclick">
+
+          <!-- Specify details about the item that buyers will purchase. -->
+          <input type="hidden" name="item_name" value="iRobot">
+          <input type="hidden" name="amount" value="99.99">
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="hidden" name="notify_url" value="https://ipn-listener-paypal.herokuapp.com/example_usage-ipn.php"
+
+          <!-- Display the payment button. -->
+          <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+            alt="Buy Now">
+          <img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Buy Now - Options</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+
+          <!-- Identify your business so that you can collect the payments. -->
+          <input type="hidden" name="business" value="aaronross@paypal.com">
+
+          <!-- Specify a Buy Now button. -->
+          <input type="hidden" name="cmd" value="_xclick">
+
+          <!-- Specify details about the item that buyers will purchase. -->
+          <input type="hidden" name="item_name" value="Design">
+          <input type="hidden" name="currency_code" value="USD">
+
+          <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
+          <!-- Provide a drop-down menu option field. 
+      <input type="hidden" name="on0" value="Type">Design<br />
+      <select name="os0">
+        <option value="Select a type">-- Select a type --</option>
+        <option value="Standard">Striped</option>
+        <option value="Collapsible">Solid</option>
+      </select> <br /> -->
+
+          <!-- Provide a drop-down menu option field with prices. -->
+          <input type="hidden" name="on0" value="Design">Design <br />
+          <select name="os0">
+            <option value="Striped">Striped - $30.00 USD</option>
+            <option value="Solid">Solid - $25.00 USD</option>
+            <option value="Dots">Dots - $20.00 USD</option>
+          </select> <br />
+
+          <!-- Specify the price that PayPal uses for each option. -->
+          <input type="hidden" name="option_select0" value="Striped">
+          <input type="hidden" name="option_amount0" value="30.00">
+          <input type="hidden" name="option_select1" value="Solid">
+          <input type="hidden" name="option_amount1" value="25.00">
+          <input type="hidden" name="option_select2" value="Dots">
+          <input type="hidden" name="option_amount2" value="20.00">
+          <input type="hidden" name="option_index" value="0">
+
+          <br>
+          <!-- Display the payment button. -->
+          <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+            alt="Buy Now">
+          <img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Cart</h4>
+        <form target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+
+          <!-- Identify your business so that you can collect the payments. -->
+          <input type="hidden" name="business" value="aaronross@paypal.com">
+
+          <!-- Specify a PayPal Shopping Cart Add to Cart button. -->
+          <input type="hidden" name="cmd" value="_cart">
+          <input type="hidden" name="add" value="1">
+
+          <!-- Specify details about the item that buyers will purchase. -->
+          <input type="hidden" name="item_name" value="Birthday - Cake and Candle">
+          <input type="hidden" name="amount" value="13.95">
+          <input type="hidden" name="currency_code" value="USD">
+
+          <!-- Display the payment button. -->
+          <input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_cart_LG.gif"
+            alt="Add to Cart">
+          <img alt="" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Subscribe</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+
+          <!-- Identify your business so that you can collect the payments. -->
+          <input type="hidden" name="business" value="aaronross@paypal.com">
+
+          <!-- Specify a Subscribe button. -->
+          <input type="hidden" name="cmd" value="_xclick-subscriptions">
+
+          <!-- Identify the subscription. -->
+          <input type="hidden" name="item_name" value="Aaron's Weekly Digest">
+          <input type="hidden" name="item_number" value="Aaron Weekly">
+
+          <!-- Set the terms of the 1st trial period. -->
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="hidden" name="a1" value="0">
+          <input type="hidden" name="p1" value="7">
+          <input type="hidden" name="t1" value="D">
+
+          <!-- Set the terms of the 2nd trial period. -->
+          <input type="hidden" name="a2" value="5.00">
+          <input type="hidden" name="p2" value="3">
+          <input type="hidden" name="t2" value="W">
+
+          <!-- Set the terms of the regular subscription. -->
+          <input type="hidden" name="a3" value="99.99">
+          <input type="hidden" name="p3" value="2">
+          <input type="hidden" name="t3" value="Y">
+
+          <!-- Set recurring payments until canceled. -->
+          <input type="hidden" name="src" value="1">
+
+          <!-- Display the payment button. -->
+          <input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_LG.gif"
+            alt="Subscribe">
+          <img alt="" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Subscribe with Limited Billing Cycle</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+
+          <!-- Identify your business so that you can collect the payments. -->
+          <input type="hidden" name="business" value="aaronross@paypal.com">
+
+          <!-- Specify a Subscribe button. -->
+          <input type="hidden" name="cmd" value="_xclick-subscriptions">
+
+          <!-- Identify the subscription. -->
+          <input type="hidden" name="item_name" value="Alice's Monthly Digest">
+          <input type="hidden" name="item_number" value="DIG Weekly">
+
+          <!-- Set the terms of the recurring payments. -->
+          <input type="hidden" name="a3" value="69.95">
+          <input type="hidden" name="p3" value="1">
+          <input type="hidden" name="t3" value="M">
+
+          <!-- Set recurring payments to stop after 6 billing cycles. -->
+          <input type="hidden" name="src" value="1">
+          <input type="hidden" name="srt" value="6">
+
+          <!-- Display the payment button. -->
+          <input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_LG.gif"
+            alt="Subscribe">
+          <img alt="" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
+        </form>
+      </div>
+
+    </div>
+
+    <h2>Hosted Buttons</h2>
+
+    <div class="container">
+
+      <div class="button">
+        <h4>Buy Now</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="HRT64SDKTSBEJ">
+          <table>
+            <tr>
+              <td><input type="hidden" name="on0" value="Colors">Colors</td>
+            </tr>
+            <tr>
+              <td><select name="os0">
+                  <option value="Red">Red $209.99 USD</option>
+                  <option value="White">White $199.99 USD</option>
+                  <option value="Black">Black $199.99 USD</option>
+                </select> </td>
+            </tr>
+          </table>
+          <br>
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"
+            name="submit" alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+      </div>
+
+      <div class="button">
+        <h4>Donate</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick" />
+          <input type="hidden" name="hosted_button_id" value="9TY8BVLXMJ6TY" />
+          <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"
+            name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+          <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Cart</h4>
+
+        <form target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="K3JTP9GNFHGDJ">
+          <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_LG.gif" border="0" name="submit"
+            alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+      </div>
+
+      <div class="button">
+        <h4>Installment</h4>
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="ML5E8KKKKXXJU">
+          <table>
+            <tr>
+              <td><input type="hidden" name="on0" value="plan"></td>
+            </tr>
+            <tr>
+              <td><input type="hidden" name="os0" value="option_0"></td>
+              <td><strong>Payments</strong></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Number of payments 4</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Start payments At checkout</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <table>
+                  <tr>
+                    <th align="left">Due*</th>
+                    <th align="right">Amount</th>
+                  </tr>
+                  <tr>
+                    <td>At checkout</td>
+                    <td align="right">$50.00 USD</td>
+                  </tr>
+                  <tr>
+                    <td>Every 1 month (x 3)</td>
+                    <td align="right">$50.00 USD</td>
+                  </tr>
+                  <tr>
+                    <td COLSPAN="2" ALIGN="right">Total $200.00 USD</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"><i>* We calculate payments from the date of checkout.</i></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <td align=center><i>Sign up for</i></td>
+            </tr>
+            <tr>
+              <td><input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_installment_plan_LG.gif"
+                  border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"></td>
+            </tr>
+          </table>
+          <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+      </div>
+
+      <div class="button">
+        <h4>Cart With Options</h4>
+
+        <form target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="49PPMFXS5QQMA">
+          <table>
+            <tr>
+              <td><input type="hidden" name="on0" value="Colors">Colors</td>
+            </tr>
+            <tr>
+              <td><select name="os0">
+                  <option value="Red">Red $269.99 USD</option>
+                  <option value="Blue">Blue $259.99 USD</option>
+                  <option value="Black">Black $249.99 USD</option>
+                </select> </td>
+            </tr>
+          </table>
+          <br>
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_LG.gif" border="0" name="submit"
+            alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+      </div>
+
+      <div class="button">
+        <h4> Subscription</h4>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="PM5WWV8LERCQ2">
+        <table>
+        <tr><td><input type="hidden" name="on0" value=""></td></tr><tr><td><select name="os0">
+          <option value="Option 1">Option 1 : $10.00 USD - monthly</option>
+          <option value="Option 2">Option 2 : $25.00 USD - monthly</option>
+          <option value="Option 3">Option 3 : $50.00 USD - monthly</option>
+        </select> </td></tr>
+        </table>
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+      </div>
+    </div>
+    
+
+    <h2>Payflow Buttons</h2>
+
+    <div class="container">
+
+      <div class="button">
+          <h4>Payflow Link Simple</h4>
+
+        <form method="POST" action="https://pilot-payflowlink.paypal.com">
+          <input type="hidden" name="LOGIN" value="awross">
+          <input type="hidden" name="PARTNER" value="PayPal">
+          <input type="hidden" name="TYPE" value="S">
+          <input type="hidden" name="AMOUNT" value="12.00">
+          <input type="hidden" name="NAME" value="Tina Johnson">
+          <input type="hidden" name="ADDRESS" value="123 Main St.">
+          <input type="hidden" name="COUNTRY" value="US">
+          <input type="hidden" name="SHOWCONFIRM" value="true">  
+          <input type="submit" value="Buy">
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
