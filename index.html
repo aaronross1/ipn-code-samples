@@ -102,7 +102,7 @@
   <!-- PayPal BEGIN -->
   <script> ;(function(a,t,o,m,s){a[m]=a[m]||[];a[m].push({t:new Date().getTime(),event:'snippetRun'});var f=t.getElementsByTagName(o)[0],e=t.createElement(o),d=m!=='paypalDDL'?'&m='+m:'';e.async=!0;e.src='https://www.paypal.com/tagmanager/pptm.js?id='+s+d;f.parentNode.insertBefore(e,f);})(window,document,'script','paypalDDL','a18b4775-1ef0-4187-9145-7933a3dbdddf'); </script> 
   <!-- PayPal END -->
-	<script src="paypal.com/sdk/js?client-id=ASnEDvbKBnourmhEREMUsbsbXmFKsovgh9-Alf-U4bfU7R3-YeC5EZ98KTQG-JGHPMm1oCWmYGkpadWP&components=messages" data-namespace="paypal2"/script>
+  <script src="https://www.paypal.com/sdk/js?client-id=ASnEDvbKBnourmhEREMUsbsbXmFKsovgh9-Alf-U4bfU7R3-YeC5EZ98KTQG-JGHPMm1oCWmYGkpadWP&components=messages" data-namespace="paypal2"></script>
 </head>
 
 <body>
@@ -121,9 +121,9 @@
         <!-- Set up a container element for the button -->
         <div id="paypal-button-container"></div>
         
-        <!-- Include the PayPal JavaScript SDK -->
+        <!-- Include the PayPal JavaScript SDK
         <script src="https://www.paypal.com/sdk/js?client-id=ARSckWtCLll2ws96SJbboNeDOsmgJ922m_zH8rV-iKDPcrdH4L74HdbXTDJ1ugdzAtQNP7PlgmVXxZ0D&currency=USD"></script>
-        
+         -->
         <script>
           // Render the PayPal button into #paypal-button-container
           paypal.Buttons({
