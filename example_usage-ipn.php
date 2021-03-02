@@ -13,7 +13,6 @@ $ipn = new PaypalIPN();
 $ipn->useSandbox();
 $verified = $ipn->verifyIPN();
 if ($verified) {
-    print_r($raw_post_data, TRUE)
      /* Process IPN
      * A list of variables is available here:
      * https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNandPDTVariables/
